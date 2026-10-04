@@ -2,7 +2,7 @@
 
 Single source of truth **index** for contributors and AI agents. Claude Code reaches this file via `CLAUDE.md`, which is a symlink to this file.
 
-Detailed information lives in [`docs/`](docs/README.md). This file stays short on purpose: scan the table, jump to the file you need.
+Detailed information lives in [`docs/`](docs/). This file stays short on purpose: scan the table, jump to the file you need.
 
 Root `README.md` is visitor-facing; `AGENTS.md` is the contributor index. Subjects covered in both must agree, but tone may differ.
 
@@ -12,32 +12,24 @@ Astro 7 static site for a personal portfolio, deployed to GitHub Pages at `https
 
 - Package manager: **pnpm** (Node `>=22.12.0`).
 - Deploy gate: `pnpm build`. Run `pnpm check` before pushing.
-- No linter, no formatter. A Vitest unit + integration suite exists.
+- No linter, no formatter. Vitest (unit + integration) and Playwright (E2E) suites exist.
 
 ## Where to look
 
 | Topic | File |
 | --- | --- |
 | Commands & gates | [`docs/commands.md`](docs/commands.md) |
-| Testing (Vitest, structure, E2E deferral) | [`docs/testing.md`](docs/testing.md) |
-| Stack, path aliases, feature-folder rule | [`docs/architecture.md`](docs/architecture.md) |
+| Stack, path aliases, feature folders, `lib/` vs `scripts/` | [`docs/architecture.md`](docs/architecture.md) |
 | Tailwind v4 tokens, `gh-*` / `hp-*` conventions | [`docs/styling.md`](docs/styling.md) |
-| File-based routes & deploy target | [`docs/routing.md`](docs/routing.md) |
-| Internationalization (i18n) | [`docs/i18n.md`](docs/i18n.md) |
+| Routes, legacy redirects, deploy | [`docs/routing.md`](docs/routing.md) |
+| Internationalization (locales, fallback, hreflang) | [`docs/i18n.md`](docs/i18n.md) |
+| Content collections & MarkdownLayout | [`docs/content-pipeline.md`](docs/content-pipeline.md) |
+| Testing (Vitest, Playwright) | [`docs/testing.md`](docs/testing.md) |
 | Copy voice, glyph allowlist, languages | [`docs/brand-voice.md`](docs/brand-voice.md) |
 | Commit message rules (no AI byline) | [`docs/commit-style.md`](docs/commit-style.md) |
-| `.claude/` allowlist & hooks | [`docs/claude-settings.md`](docs/claude-settings.md) |
-| `astro-tailwind-reviewer` subagent | [`docs/reviewer-subagent.md`](docs/reviewer-subagent.md) |
-| Project skills (`new-section`, …) | [`docs/skills.md`](docs/skills.md) |
-| Content collections & MarkdownLayout (stub) | [`docs/content-pipeline.md`](docs/content-pipeline.md) |
-| `design-system/` reference UI kits (stub) | [`docs/design-system.md`](docs/design-system.md) |
-| `src/lib/` and `src/scripts/` (stub) | [`docs/lib-and-scripts.md`](docs/lib-and-scripts.md) |
+| `.claude/` settings, reviewer subagent, skills | [`docs/agent-tooling.md`](docs/agent-tooling.md) |
 
-For the index of `docs/` and its contribution rules, see [`docs/README.md`](docs/README.md).
-
-## Rules for this index
-
-See [docs/governance.md](docs/governance.md#rules) for the rules governing this file.
+Each subject has one owning file in `docs/`; edit that file, not a copy. The hard rules below are the one deliberate duplicate, so update both places when one changes.
 
 ## Hard rules that always apply (do not move into `docs/`)
 

@@ -54,9 +54,4 @@ Playwright (`@playwright/test`) drives Chromium against the built site (`pnpm bu
 
 Requires the browser binary once: `pnpm exec playwright install chromium` (CI needs `--with-deps` for OS-level dependencies).
 
-Three known gaps the suite surfaced (tracked as `test.fixme`/tolerant assertions, not silently hidden):
-- `/CV.pdf` is linked (home Contact, `/contact`, Footer) but `public/CV.pdf` doesn't exist — 404. The CTA-exists check is green; the asset-200 check is `test.fixme` pending the real file.
-- `Footer.astro` uses `rel="noreferrer"`, `About.astro`'s bitset link uses `rel="noopener noreferrer"` — inconsistent but not a security issue. Specs assert the weaker shared invariant.
-- `[data-tag-filter-count]` sits outside `[data-tag-filter-root]` on `/work` and `/writing`, so `tag-filter.ts`'s root-scoped lookup never updates it when chips filter the list. Specs assert visible-item count via the DOM, not the counter span.
-
-See `tests/e2e/README.md` for the full writeup.
+Known gaps the suite surfaced (missing `/CV.pdf`, inconsistent `rel` on external links, tag-filter counter not updating) are tracked in [`tests/e2e/README.md`](../tests/e2e/README.md#known-gaps-surfaced-by-this-suite).

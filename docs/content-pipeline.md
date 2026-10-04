@@ -22,7 +22,7 @@ src/content/
     ko-kr/
 ```
 
-**Entry ID shape:** After migration, `entry.id = '<localeDir>/<slug>'`
+**Entry ID shape:** `entry.id = '<localeDir>/<slug>'`
 - `en-us/slug-a`
 - `ja-jp/slug-a` (same slug, different locale)
 - `en-us/slug-x`
@@ -35,23 +35,9 @@ src/content/
 
 Dynamic routes `src/pages/[lang]/work/[slug].astro` and `src/pages/[lang]/writing/[slug].astro` mount entries through `MarkdownLayout.astro`.
 
-### Real translations
-When a localized entry exists, the page:
-- Renders the localized content
-- Sets canonical to itself
-- Includes its locale in hreflang alternates
-- Joins the hreflang cluster for that slug (language-only codes + x-default → `/en-us/…`)
+When a localized entry exists it renders as a real translation; otherwise the English source renders as a fallback. Canonical, hreflang and sitemap rules for both cases are in [`i18n.md`](i18n.md#fallback--canonical-policy).
 
-### Fallback (missing translation)
-When a localized entry does **not** exist, the page:
-- Renders the English source content at the localized URL
-- Sets canonical to the source (`/en-us/{collection}/{slug}/`)
-- Includes no self-hreflang; excluded from the hreflang cluster
-- Displays a localized fallback notice
-- Is excluded from the sitemap
-
-### Listing pages
-Collection listing pages (`src/pages/[lang]/work/index.astro`, `src/pages/[lang]/writing/index.astro`) show entries that exist in that locale, or if none, the single available entry (usually English). The same filtering applies: real entries receive full hreflang treatment; fallback entries are canonical-ed to source and excluded from sitemap.
+Listing pages (`src/pages/[lang]/{work,writing}/index.astro`) show, per slug, the entry in that locale if one exists, else the English one.
 
 ## ID parsing utilities
 
