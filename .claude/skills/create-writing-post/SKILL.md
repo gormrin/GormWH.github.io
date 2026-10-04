@@ -1,12 +1,12 @@
 ---
 name: create-writing-post
-description: Create a new entry in the `writing` content collection at `src/content/writing/<slug>.md` with the project's standard frontmatter and a first-person body. User-invocable only.
+description: Create a new entry in the `writing` content collection at `src/content/writing/en-us/<slug>.md` with the project's standard frontmatter and a first-person body. User-invocable only.
 disable-model-invocation: true
 ---
 
 # create-writing-post
 
-Scaffolds a new entry in the `writing` content collection defined in `src/content.config.ts`. The collection is consumed by `src/pages/writing/index.astro` (the listing) and `src/pages/writing/[slug].astro` (the per-entry detail page), and surfaced on the homepage by `src/features/home/Writing.astro`.
+Scaffolds a new entry in the `writing` content collection defined in `src/content.config.ts`. The collection is consumed by `src/pages/[lang]/writing/index.astro` (the listing) and `src/pages/[lang]/writing/[slug].astro` (the per-entry detail page), and surfaced on the homepage by `src/features/home/Writing.astro`.
 
 ## Usage
 
@@ -28,7 +28,7 @@ If the user is unsure which `kind` fits, default to `Note`.
 
 ## Voice and length
 
-Personal copy uses **first-person `I`-voice**, calm and direct (per `AGENTS.md` §4). No `we`. No emoji. Allowed glyphs only: `→ · — ※ ✻`. Sentence case for the title. Keep both `description` and the body conversational. Existing entries (`src/content/writing/*.md`) are the calibration set; match their density and tone.
+Personal copy uses **first-person `I`-voice**, calm and direct (per `docs/brand-voice.md`). No `we`. No emoji. Allowed glyphs only: `→ · — ※ ✻`. Sentence case for the title. Keep both `description` and the body conversational. Existing entries (`src/content/writing/en-us/*.md`) are the calibration set; match their density and tone.
 
 ## Steps
 
@@ -51,12 +51,12 @@ Collect from the user (asking only for what wasn't already provided):
 | `tags` | Optional. Comma-separated list; pass through as a YAML array. If empty, omit the key (the schema defaults to `[]`). |
 | `important` | Optional, defaults to `false`. Only set `true` for entries that should pin to the top of the listing. |
 | `draft` | Optional, defaults to `false`. `true` hides the entry from production builds (still visible in `pnpm dev`). |
-| `slug` | Optional. If absent, derive from `title`: lowercase, ASCII-only, words joined with `-`, strip punctuation, drop articles (`a`, `an`, `the`) when that produces a cleaner slug. Reject collisions with existing files in `src/content/writing/`. |
+| `slug` | Optional. If absent, derive from `title`: lowercase, ASCII-only, words joined with `-`, strip punctuation, drop articles (`a`, `an`, `the`) when that produces a cleaner slug. Reject collisions with existing files in `src/content/writing/en-us/`. |
 | `body` | Optional. If the user supplies a draft, use it; otherwise compose 1–3 short paragraphs from `title` + `description`, in `I`-voice. |
 
 ### 3. Validate
 
-- `slug` matches `^[a-z0-9][a-z0-9-]*$` and does not already exist as `src/content/writing/<slug>.md`.
+- `slug` matches `^[a-z0-9][a-z0-9-]*$` and does not already exist as `src/content/writing/en-us/<slug>.md`.
 - `date` matches `^\d{4}-\d{2}-\d{2}$` and is a real calendar date.
 - `kind` is exactly one of `Note`, `Essay`, `Log`.
 - If any check fails, stop and report the exact rule that failed. Do not write a file.
@@ -78,7 +78,7 @@ Read `.claude/skills/create-writing-post/template.md`. Substitute placeholders:
 
 ### 5. Write the file
 
-Target path: `src/content/writing/<slug>.md`.
+Target path: `src/content/writing/en-us/<slug>.md`.
 
 - If the file already exists, stop and tell the user — do not overwrite. Suggest a different slug.
 - Otherwise create the file.
@@ -88,11 +88,11 @@ Target path: `src/content/writing/<slug>.md`.
 Print:
 
 ```
-Wrote src/content/writing/<slug>.md
+Wrote src/content/writing/en-us/<slug>.md
 
 This entry is now picked up by:
-  - /writing                   (listing, src/pages/writing/index.astro)
-  - /writing/<slug>/           (detail, src/pages/writing/[slug].astro)
+  - /en-us/writing/             (listing, src/pages/[lang]/writing/index.astro)
+  - /en-us/writing/<slug>/      (detail, src/pages/[lang]/writing/[slug].astro)
   - The homepage Writing list (src/features/home/Writing.astro), if it ranks in the top 4 by importance + date.
 
 Run `pnpm build` to verify the schema and routes still build.
@@ -103,5 +103,5 @@ Substitute the actual slug. Do **not** run `pnpm build` from inside the skill �
 ## What this skill does NOT do
 
 - Does not modify `src/content.config.ts`. If a new `kind` value is needed, ask the user to update the Zod enum first.
-- Does not edit `src/pages/writing/*` — those routes already enumerate the collection.
+- Does not edit `src/pages/[lang]/writing/*` — those routes already enumerate the collection.
 - Does not run `pnpm build`, `pnpm dev`, or `pnpm check`.

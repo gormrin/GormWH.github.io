@@ -1,57 +1,56 @@
 # GormWH.github.io
 
-Source for my personal site at [https://GormWH.github.io](https://GormWH.github.io) — built with Astro 7, Tailwind v4 (CSS-first), and React 19 islands.
+Source for my personal site at [https://GormWH.github.io](https://GormWH.github.io) — built with Astro 7 and Tailwind v4 (CSS-first), with the React integration available for islands.
+
+## What's on the site
+
+- A homepage (hero, about, recent work, recent writing, contact).
+- `work` and `writing` collections, each with a listing page (tag filter) and per-entry pages.
+- A contact page and a custom 404.
+- Three languages under URL prefixes: `/en-us/`, `/ja-jp/`, `/ko-kr/`. English is the source; untranslated entries fall back to English with a notice. Old unprefixed URLs redirect to `/en-us/…`.
 
 ## Stack
 
-- **Astro 7**, static output. Single page today (`src/pages/index.astro`); routes for `/about`, `/work`, `/blog`, and `/contact` are stubbed in the header but not yet built.
-- **React 19** via `@astrojs/react`. Islands are available; nothing currently uses them — every page-level file is `.astro`.
-- **Tailwind v4** through the Vite plugin (`@tailwindcss/vite`). Configuration is **CSS-first**: every design token lives in `@theme { ... }` inside `src/styles/global.css`. There is no `tailwind.config.*`.
+- **Astro 7**, static output, deployed to **GitHub Pages**.
+- **Tailwind v4** through `@tailwindcss/vite`. Every design token lives in `@theme { ... }` inside `src/styles/global.css`. There is no `tailwind.config.*`.
+- **React 19** via `@astrojs/react` for islands.
 - **TypeScript** via `astro/tsconfigs/strictest`.
-- **pnpm** on **Node ≥ 22.12.0**. `pnpm-workspace.yaml` allowlists native builds for `esbuild` and `sharp`.
-- No test runner, linter, or formatter is wired up — that is intentional for now.
+- **Vitest** for unit and integration tests, **Playwright** for browser E2E.
+- **pnpm** on **Node ≥ 22.12.0**. No linter or formatter.
 
 ## Project structure
 
 ```text
 src/
-├── components/        site chrome (Header, Footer)
-├── layouts/           BaseLayout.astro
-├── features/home/     page-scoped sections (Hero, About, Work, Writing, Contact)
-├── pages/             index.astro
-└── styles/            global.css, theme.css — Tailwind v4 @theme tokens
-design-system/         read-only brand reference (see below)
-public/                favicons
+├── components/        site-wide chrome and collection UI (Header, Footer, TagFilter, …)
+├── content/           work/ and writing/ markdown, one subfolder per locale
+├── data/              static data (contact channels)
+├── features/home/     homepage sections (Hero, About, Work, Writing, Contact)
+├── layouts/           BaseLayout, MarkdownLayout
+├── lib/               build-time helpers (i18n, SEO, UI strings, ordering)
+├── scripts/           browser scripts (tag filter, language menu)
+├── pages/             [lang]/ routes, legacy redirect stubs, 404
+└── styles/            global.css (tokens + gh-*/hp-* classes), theme.css, fonts.css
+tests/                 unit, integration, e2e
+public/                favicons, OG image, robots.txt
 ```
 
-Page sections live under `src/features/<route>/<Section>.astro` — a **feature-folder** convention rather than a single shared `components/` bag. `src/components/` is reserved for site-wide chrome.
-
-Path aliases (`tsconfig.json`):
-
-- `@components/*` → `src/components/*`
-- `@layouts/*` → `src/layouts/*`
-- `@features/*` → `src/features/*`
-
-Component classes are namespaced: `gh-*` for site-wide patterns (`gh-display`, `gh-btn`, `gh-meta`) and `hp-*` for homepage-scoped pieces.
-
-## Styling
-
-Design tokens — colors, typography scale, spacing containers, easing curves, shadows — are declared in `src/styles/global.css` inside Tailwind v4's `@theme { ... }` block. They generate utilities automatically (`bg-bg`, `text-ink-1`, `font-display`, `max-w-page`, etc.). Reach for tokens and utilities first; only add a new `gh-*` class when a pattern recurs.
-
-`design-system/` is a standalone brand kit authored before the Astro build, kept as a **read-only reference** — not shipped, not imported, not part of the build graph. It contains voice and visual rules, original token definitions, and JSX reference UI kits (`ui_kits/{homepage,case_study,blog,resume}/*.jsx`) to **port from** when filling in real Astro sections. The live source of truth for what actually ships is `src/styles/global.css`.
-
-## Develop, build, preview
+## Develop, build, test
 
 | Command | What it does |
 | --- | --- |
 | `pnpm install` | Install dependencies |
-| `pnpm dev` | Astro dev server at `localhost:4321` |
-| `pnpm build` | Build the production site to `./dist/` |
+| `pnpm dev` | Dev server at `localhost:4321` |
+| `pnpm build` | Build the site to `./dist/` |
 | `pnpm preview` | Serve `./dist/` locally |
-| `pnpm astro check` | Type-check `.astro` and TypeScript |
+| `pnpm check` | Type-check `.astro` and TypeScript |
+| `pnpm test` | Vitest unit + integration |
+| `pnpm test:e2e` | Rebuild, then run Playwright |
 
 ## Deployment
 
-The site targets **GitHub Pages** at `https://GormWH.github.io`. `astro.config.mjs` sets `site` to that origin and intentionally leaves `base` unset — the repo deploys at the user/organization Pages root, not a project subpath.
+Every push to `main` builds and deploys through `.github/workflows/deploy.yml` (`withastro/action`). `astro.config.mjs` sets `site` to `https://GormWH.github.io` and leaves `base` unset, because the repo is served at the Pages root.
 
-Note: no `.github/workflows/` is committed yet, so the GitHub Pages build is not automated in this repo. Wiring up an Actions workflow is on the to-do list.
+## Contributing
+
+Conventions for contributors and AI agents start at [`AGENTS.md`](AGENTS.md).

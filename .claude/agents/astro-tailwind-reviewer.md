@@ -1,6 +1,6 @@
 ---
 name: astro-tailwind-reviewer
-description: Read-only reviewer for Astro 6 + Tailwind v4 portfolio. Enforces token discipline, the `gh-*`/`hp-*` prefix split, and the feature-folder convention. Invoke after editing `.astro` files or `src/styles/global.css`.
+description: Read-only reviewer for the Astro + Tailwind v4 portfolio. Enforces token discipline, the `gh-*`/`hp-*` prefix split, and the feature-folder convention. Invoke after editing `.astro` files or `src/styles/global.css`.
 tools: Read, Grep, Glob
 model: sonnet
 ---

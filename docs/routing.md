@@ -16,15 +16,7 @@ File-based routes under `src/pages/[lang]/`, parametrized by locale path. Locale
 - `[lang]/work/index.astro` — work listing
 - `[lang]/work/[slug].astro` — work detail
 
-**Rendering behavior:**
-- If a translation exists in `src/content/{collection}/{lang}/<slug>.md`, the detail page renders it with a real-translation hreflang cluster (language-only codes + x-default).
-- If a translation does **not** exist (missing file), the page renders the English source content at the localized URL with:
-  - `<link rel="canonical">` → the actual source URL `/en-us/{collection}/{slug}/`
-  - A visible localized fallback notice
-  - No self-hreflang; excluded from hreflang cluster
-  - Excluded from the sitemap via `sitemap({ filter })`
-
-This design preserves URL uniformity (the language switcher never 404s) while keeping canonicals and hreflang clean.
+Every locale gets every slug. Untranslated entries render the English source with canonical, hreflang and sitemap handling described in [`i18n.md`](i18n.md#fallback--canonical-policy).
 
 ### Legacy redirects (static meta-refresh stubs)
 
@@ -57,7 +49,4 @@ This design preserves URL uniformity (the language switcher never 404s) while ke
 - `astro.config.mjs` sets `site: 'https://GormWH.github.io'` (used for canonical URLs and the sitemap).
 - **No `base` is set**, so the deploy expects the user/organization Pages root, not a project subpath.
 - Deploy gate: `pnpm build` (see [`commands.md`](commands.md)).
-
-## Deploy automation
-
-> **Status: incomplete** — no GitHub Actions / Pages workflow is committed yet, so the deploy is currently manual. Fill in or delete once automation lands.
+- `.github/workflows/deploy.yml` builds with `withastro/action` (Node 24, pnpm) and publishes with `actions/deploy-pages` on every push to `main`, or manually via `workflow_dispatch`. Tests are not part of the workflow.

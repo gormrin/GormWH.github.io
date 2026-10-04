@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # new-section
 
-Scaffolds a new page section that follows the feature-folder convention defined in `AGENTS.md` §3 (Architecture → Path aliases / Routing).
+Scaffolds a new page section that follows the feature-folder convention described in `docs/architecture.md`.
 
 ## Usage
 
