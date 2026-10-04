@@ -19,7 +19,7 @@ Examples:
 ```
 /new-section work CaseStudies
 /new-section about Timeline
-/new-section blog Recent
+/new-section writing Recent
 ```
 
 ## Steps
@@ -36,7 +36,9 @@ When invoked, perform these steps in order — do not skip the reviewer step.
 
 - `slug` = kebab-case of `<SectionName>` (e.g. `CaseStudies` → `case-studies`).
 - `id` = `<route>-<slug>` (used as the section's DOM id).
-- `number` = the next 2-digit ordinal for sections in this route. Read all existing files in `src/features/<route>/` (if the dir exists), count their `<p class="gh-meta">NN — …</p>` labels, take max+1. If the dir doesn't exist or has no sections, start at `01`. Format with leading zero.
+- `key` = camelCase of `<SectionName>` (e.g. `CaseStudies` → `caseStudies`).
+- `uiKey` = `<route>.<key>` (e.g. `home.caseStudies`), the `src/lib/ui.ts` namespace for the section's copy.
+- `number` = the next 2-digit ordinal for sections in this route. Section labels live in `src/lib/ui.ts`, not in the `.astro` files: read the `en` dictionary's `<route>` block, take the highest `eyebrow: 'NN — …'`, add one. If the block has no eyebrows, start at `01`. If the user wants the section somewhere other than last, say which existing eyebrows would need renumbering; do not renumber them yourself.
 
 ### 3. Read the template
 
@@ -45,8 +47,8 @@ Read `.claude/skills/new-section/template.astro`. Substitute:
 | Placeholder | Replace with |
 | --- | --- |
 | `__SECTION_ID__` | the computed `id` |
-| `__SECTION_NUMBER__` | the computed `number` |
-| `__SECTION_NAME__` | the original `SectionName` (used in the meta label) |
+| `__UI_KEY__` | the computed `uiKey` |
+| `__SECTION_NAME__` | the original `SectionName` (used in the header comment) |
 
 ### 4. Write the new file
 
@@ -54,21 +56,31 @@ Target path: `src/features/<route>/<SectionName>.astro`. If the file already exi
 
 If `src/features/<route>/` does not yet exist, create it.
 
-### 5. Print the wire-up snippet
+### 5. Print the wire-up snippets
 
-The skill does **not** edit `src/pages/<route>.astro` (or `src/pages/<route>/index.astro`). Print the exact lines for the user to paste:
+The skill does **not** edit `src/lib/ui.ts` or the page. `UiKey` is typed from `UiDict`, so `pnpm check` fails until the strings below are added. Print the exact lines for the user to paste:
 
 ```
-Add to src/pages/<route>.astro (or src/pages/<route>/index.astro):
+1. src/lib/ui.ts
 
-  Frontmatter:
-    import <SectionName> from "@features/<route>/<SectionName>.astro";
+   In the UiDict interface, inside <route>:
+     <key>: { eyebrow: string; heading: string };
 
-  Body (inside <BaseLayout>, in the desired position):
-    <<SectionName> />
+   In each of the en, ja and ko dictionaries, inside <route>:
+     <key>: { eyebrow: '<number> — <SectionName>', heading: 'Heading TBD' },
+
+   (ja / ko copy is hand-written; leave the English placeholder if no translation exists yet.)
+
+2. src/pages/[lang]/<route>.astro (src/pages/[lang]/index.astro for home)
+
+   Frontmatter:
+     import <SectionName> from "@features/<route>/<SectionName>.astro";
+
+   Body (inside <BaseLayout>, in the desired position):
+     <<SectionName> locale={lang} t={t} />
 ```
 
-Include the actual computed paths in the printed output, not the placeholders.
+Include the actual computed values in the printed output, not the placeholders.
 
 ### 6. Invoke the reviewer
 
@@ -76,6 +88,6 @@ Mention `@astro-tailwind-reviewer` so the reviewer subagent runs against the new
 
 ## What this skill does NOT do
 
-- It does not edit `src/pages/<route>.astro` (so the user reviews the wire-up before it renders).
+- It does not edit `src/lib/ui.ts` or `src/pages/[lang]/…` (so the user reviews the copy and wire-up before it renders).
 - It does not modify `src/styles/global.css` or invent new `gh-*` classes.
 - It does not run `pnpm dev` or `pnpm check` — let the user run those.

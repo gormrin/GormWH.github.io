@@ -18,7 +18,7 @@ Runs automatically at the end of `new-section`, or manually with `@astro-tailwin
 
 | Skill | Does |
 | --- | --- |
-| `/new-section <route> <SectionName>` | Writes `src/features/<route>/<SectionName>.astro` from the template, prints the import line to paste, then runs the reviewer |
+| `/new-section <route> <SectionName>` | Writes `src/features/<route>/<SectionName>.astro` from the template, prints the `ui.ts` strings and import line to paste, then runs the reviewer |
 | `/create-work-post` | Writes a new `src/content/work/en-us/<slug>.md` with validated frontmatter |
 | `/create-writing-post` | Writes a new `src/content/writing/en-us/<slug>.md` with validated frontmatter |
 

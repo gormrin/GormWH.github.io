@@ -1,15 +1,26 @@
 ---
 // __SECTION_NAME__ section.
-// Replace `Heading TBD` and the placeholder body with real content.
-// Use existing tokens / utilities (text-ink-1, bg-bg, font-display, max-w-reading, …)
-// before reaching for raw values. See docs/styling.md for the styling system.
+// Replace the placeholder body with real content. Copy lives in src/lib/ui.ts
+// under `__UI_KEY__` (en / ja / ko). Use existing tokens / utilities
+// (text-ink-1, bg-bg, font-display, max-w-reading, …) before reaching for raw
+// values. See docs/styling.md for the styling system.
+import { DEFAULT_LOCALE } from "@lib/i18n";
+import { useTranslations, type UiKey } from "@lib/ui";
+
+interface Props {
+  locale?: string;
+  t?: (key: UiKey) => string;
+}
+
+const { locale = DEFAULT_LOCALE, t: tProp } = Astro.props;
+const t = tProp ?? useTranslations(locale);
 ---
 
 <section id="__SECTION_ID__" class="gh-section mx-auto max-w-page px-6 sm:px-8">
   <header class="gh-section-head">
     <div>
-      <p class="gh-meta">__SECTION_NUMBER__ — __SECTION_NAME__</p>
-      <h2 class="gh-section-title">Heading TBD</h2>
+      <p class="gh-meta">{t('__UI_KEY__.eyebrow')}</p>
+      <h2 class="gh-section-title">{t('__UI_KEY__.heading')}</h2>
     </div>
   </header>
 
